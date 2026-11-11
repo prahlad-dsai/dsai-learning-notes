@@ -1,6 +1,6 @@
-# Programming Languages Reference
+# Programming Languages & Machine Learning Reference
 
-A self-contained reference for relearning the core ideas of Python, SQL, C, and the basics of web languages (HTML, CSS, JavaScript). Each topic explains what the concept is, shows the syntax, and lists common mistakes.
+A self-contained reference for relearning the core ideas of Python, SQL, C, web languages (HTML, CSS, JavaScript), and fundamental Machine Learning concepts. Each topic explains what the concept is, shows the syntax or equations, and lists common mistakes or practical tips.
 
 ## Contents
 
@@ -12,6 +12,7 @@ A self-contained reference for relearning the core ideas of Python, SQL, C, and 
 6. [Choosing the Right Language](#6-choosing-the-right-language)
 7. [Debugging Reference](#7-debugging-reference)
 8. [Project: API Data Explorer](#8-project-api-data-explorer)
+9. [Machine Learning Study Notes](#9-machine-learning-study-notes)
 ---
 
 # 1. Python
@@ -1105,3 +1106,96 @@ In this environment, importing `Request` from `starlette.requests` resolved a fo
 - [ ] Confirm Total Posts displays 100 for the full JSONPlaceholder dataset.
 - [ ] Confirm Posts per User shows the expected counts for all users.
 - [ ] After CSS setup, inspect both the homepage and post details page for stylesheet loading.
+
+---
+
+# 9. Machine Learning Study Notes
+
+*Covering introductory machine learning concepts and data preprocessing topics (AI/ML/DL, supervised vs. unsupervised learning, regression, classification, missing-value handling, outlier detection, capping, and log transformation).*
+
+## 9.1 Artificial Intelligence, Machine Learning, and Deep Learning
+* **Artificial Intelligence (AI)**: The broad field of building computer systems that perform tasks normally requiring human-like intelligence, such as reasoning, understanding language, recognizing patterns, or making decisions.
+* **Machine Learning (ML)**: A subset of AI where systems are given data and a learning method to identify patterns and make predictions or decisions without manual rule-writing.
+* **Deep Learning (DL)**: A subset of ML that uses multi-layer neural networks to learn complex patterns, especially useful for image recognition, speech, and language tasks.
+
+| Field | Relationship | Core Idea |
+| --- | --- | --- |
+| AI | Broadest area | Systems that perform intelligent tasks |
+| ML | Subset of AI | Systems learn patterns from data |
+| DL | Subset of ML | Uses multi-layer neural networks |
+
+## 9.2 Types of Machine Learning
+* **Supervised Learning**: The model learns from labeled examples containing input features ($X$) and the correct target/label ($y$) to predict targets for new data. Includes regression and classification.
+* **Unsupervised Learning**: The model receives data without supplied target labels to discover structure or patterns, such as clustering.
+
+| Supervised Learning | Unsupervised Learning |
+| --- | --- |
+| Training examples include known targets/labels. | Training data has no supplied target labels. |
+| Learns to predict a target. | Looks for patterns or structure. |
+| Common tasks: regression, classification. | Common task: clustering. |
+
+## 9.3 Regression vs. Classification
+* **Regression**: A supervised learning task where the target is a numerical quantity (continuous), such as predicting house prices or delivery times.
+* **Classification**: A supervised learning task where the target is a category or class, such as spam detection or image classification.
+
+| Regression | Classification |
+| --- | --- |
+| Predicts a numerical value. | Predicts a category/class. |
+| Example: House price = 72 lakh. | Example: Email = spam. |
+
+## 9.4 Data Preprocessing
+* **Purpose**: Prepares raw data by handling missing values, inconsistent formats, errors, duplicates, or extreme values so it is suitable for analysis and ML.
+* **Core Rule**: Fit preprocessing steps using training data only, then apply the learned transformations to validation/test data to avoid data leakage.
+
+## 9.5 Missing Values
+* **Imputation Methods**:
+  * **Mean Imputation**: For numerical data without strong skew or influential outliers; can be pulled by extreme values.
+  * **Median Imputation**: For skewed or outlier-heavy numerical data.
+  * **Mode Imputation**: For categorical data (most frequent category).
+  * **Deletion**: Row or column deletion should be used cautiously to avoid losing valuable information or introducing bias.
+* **Missingness Mechanisms**:
+  * **MCAR (Missing Completely At Random)**: Missingness is completely unrelated to observed or unobserved data.
+  * **MAR (Missing At Random)**: Missingness depends on another observed variable.
+  * **MNAR (Missing Not At Random)**: Missingness depends on the missing value itself (e.g., high earners hiding salary), which can bias results if ignored.
+* **Pandas Missing-Value Commands**:
+  ```python
+  df.isnull()                  # Check missing cells
+  df.isnull().sum()            # Count missing values per column
+  df.dropna()                  # Drop rows with missing values
+  df.fillna(value)             # Fill missing values
+  df["Age"] = df["Age"].fillna(df["Age"].median()) # Median imputation
+  ```
+
+## 9.6 Outliers and the IQR Method
+* **Outlier**: An observation unusually far from the general pattern; not automatically an error and must be investigated before handling.
+* **IQR Method**:
+  * $IQR = Q3 - Q1$ (where $Q1$ is the 25th percentile and $Q3$ is the 75th percentile).
+  * Lower Fence $= Q1 - 1.5 \times IQR$
+  * Upper Fence $= Q3 + 1.5 \times IQR$
+* **Pandas Outlier Detection**:
+  ```python
+  Q1 = df["Salary"].quantile(0.25)
+  Q3 = df["Salary"].quantile(0.75)
+  IQR = Q3 - Q1
+  lower_boundary = Q1 - 1.5 * IQR
+  upper_boundary = Q3 + 1.5 * IQR
+  outliers = df[(df["Salary"] < lower_boundary) | (df["Salary"] > upper_boundary)]
+  ```
+
+## 9.7 Outlier Handling: Removal vs. Capping vs. Log Transformation
+* **Removal**: Deleting observations; risky for valid, rare data.
+* **Capping (Winsorization)**: Replacing values outside boundaries with boundary values using Pandas `.clip()`:
+  ```python
+  df["Salary"] = df["Salary"].clip(lower=lower_boundary, upper=upper_boundary)
+  ```
+* **Log Transformation**: Maps positive right-skewed data to a compressed scale using logarithms ($X_{\text{new}} = \log(X)$ or `np.log1p(x)` for data containing zeros):
+  ```python
+  df["Price_log"] = np.log(df["Price"])
+  df["Count_log"] = np.log1p(df["Count"])
+  ```
+
+| Method | What Happens? | Key Trade-off |
+| --- | --- | --- |
+| Removal | The observation is deleted. | Can lose valid information and introduce bias. |
+| Capping | Extreme feature values are replaced by boundary values. | Keeps rows but alters extreme values. |
+| Log transformation | Values are mapped to a compressed scale. | Keeps ordering and observations, but changes scale and interpretation. |
