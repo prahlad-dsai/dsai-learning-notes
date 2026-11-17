@@ -1113,13 +1113,12 @@ In this environment, importing `Request` from `starlette.requests` resolved a fo
 
 # 9. Machine Learning Study Notes
 
-*Coverage: ML foundations, data preprocessing, feature engineering, and the beginning of feature selection.*
+*Covering introductory machine learning concepts and data preprocessing topics (AI/ML/DL, supervised vs. unsupervised learning, regression, classification, missing-value handling, outlier detection, capping, and log transformation).*
 
 ## 9.1 Artificial Intelligence, Machine Learning, and Deep Learning
-
-- **Artificial Intelligence (AI):** The broad field of building computer systems that perform tasks associated with intelligent behavior, such as reasoning, understanding language, recognizing patterns, or making decisions.
-- **Machine Learning (ML):** A subset of AI where systems are given data and a learning method to identify patterns and make predictions or decisions without manual rule-writing.
-- **Deep Learning (DL):** A subset of ML that uses multi-layer neural networks to learn complex patterns, especially useful for image recognition, speech, and language tasks.
+* **Artificial Intelligence (AI)**: The broad field of building computer systems that perform tasks normally requiring human-like intelligence, such as reasoning, understanding language, recognizing patterns, or making decisions.
+* **Machine Learning (ML)**: A subset of AI where systems are given data and a learning method to identify patterns and make predictions or decisions without manual rule-writing.
+* **Deep Learning (DL)**: A subset of ML that uses multi-layer neural networks to learn complex patterns, especially useful for image recognition, speech, and language tasks.
 
 | Field | Relationship | Core Idea |
 | --- | --- | --- |
@@ -1128,9 +1127,8 @@ In this environment, importing `Request` from `starlette.requests` resolved a fo
 | DL | Subset of ML | Uses multi-layer neural networks |
 
 ## 9.2 Types of Machine Learning
-
-- **Supervised Learning:** The model learns from labeled examples containing input features ($X$) and the correct target/label ($y$) to predict targets for new data (e.g., using past house data with known prices to predict a new house price).
-- **Unsupervised Learning:** The model receives data without supplied target labels to discover structure or patterns (e.g., grouping customers based on similarities when no labels are provided).
+* **Supervised Learning**: The model learns from labeled examples containing input features ($X$) and the correct target/label ($y$) to predict targets for new data. Includes regression and classification.
+* **Unsupervised Learning**: The model receives data without supplied target labels to discover structure or patterns, such as clustering.
 
 | Supervised Learning | Unsupervised Learning |
 | --- | --- |
@@ -1139,9 +1137,8 @@ In this environment, importing `Request` from `starlette.requests` resolved a fo
 | Common tasks: regression, classification. | Common task: clustering. |
 
 ## 9.3 Regression vs. Classification
-
-- **Regression:** A supervised learning task where the target is a continuous numerical quantity, such as predicting house prices, temperatures, or exam marks.
-- **Classification:** A supervised learning task where the target is a discrete category or class, such as pass/fail, spam detection, or image classification.
+* **Regression**: A supervised learning task where the target is a numerical quantity (continuous), such as predicting house prices or delivery times.
+* **Classification**: A supervised learning task where the target is a category or class, such as spam detection or image classification.
 
 | Regression | Classification |
 | --- | --- |
@@ -1149,29 +1146,20 @@ In this environment, importing `Request` from `starlette.requests` resolved a fo
 | Example: House price = 72 lakh. | Example: Email = spam. |
 
 ## 9.4 Data Preprocessing
-
-- **Purpose:** Prepares raw data by handling missing values, inconsistent formats, errors, duplicates, or features on very different scales so it is suitable for analysis and ML models.
-- **Core Rule:** Fit preprocessing steps using training data only, then apply the learned transformations to validation/test data to avoid data leakage.
+* **Purpose**: Prepares raw data by handling missing values, inconsistent formats, errors, duplicates, or extreme values so it is suitable for analysis and ML.
+* **Core Rule**: Fit preprocessing steps using training data only, then apply the learned transformations to validation/test data to avoid data leakage.
 
 ## 9.5 Missing Values
-
-A missing value is an absent entry in a dataset. The correct treatment depends on why the value is missing and what information the column contains.
-
-- **Imputation & Deletion Methods:**
-  - **Mean Imputation:** Replace missing numerical values with the column mean; can be pulled by extreme values.
-  - **Median Imputation:** Replace missing numerical values with the median; more robust when the distribution contains outliers.
-  - **Mode Imputation:** Replace missing categorical values with the most frequent category.
-  - **Row Deletion:** Remove records with missing values when the loss of records is acceptable and does not introduce harmful bias.
-  - **Column Deletion:** Consider removing a column only when it has little useful information or too much missing data, after checking its importance.
-
-- **Missingness Mechanisms:**
-  - **MCAR (Missing Completely At Random):** Missingness is completely unrelated to observed or unobserved data.
-  - **MAR (Missing At Random):** Missingness is related to other observed information.
-  - **MNAR (Missing Not At Random):** Missingness is related to the missing value itself or to unobserved information (e.g., high earners hiding salary), which can bias results if ignored.
-
-> **Important judgement:** Do not automatically delete a missing value. First investigate why it is missing and whether it carries meaning.
-
-- **Pandas Missing-Value Commands:**
+* **Imputation Methods**:
+  * **Mean Imputation**: For numerical data without strong skew or influential outliers; can be pulled by extreme values.
+  * **Median Imputation**: For skewed or outlier-heavy numerical data.
+  * **Mode Imputation**: For categorical data (most frequent category).
+  * **Deletion**: Row or column deletion should be used cautiously to avoid losing valuable information or introducing bias.
+* **Missingness Mechanisms**:
+  * **MCAR (Missing Completely At Random)**: Missingness is completely unrelated to observed or unobserved data.
+  * **MAR (Missing At Random)**: Missingness depends on another observed variable.
+  * **MNAR (Missing Not At Random)**: Missingness depends on the missing value itself (e.g., high earners hiding salary), which can bias results if ignored.
+* **Pandas Missing-Value Commands**:
   ```python
   df.isnull()                  # Check missing cells
   df.isnull().sum()            # Count missing values per column
@@ -1181,15 +1169,12 @@ A missing value is an absent entry in a dataset. The correct treatment depends o
   ```
 
 ## 9.6 Outliers and the IQR Method
-
-- **Outlier:** An observation unusually far from the rest of the observations. It may be a data-entry error or a genuine, important observation; investigate before deciding how to handle it.
-- **IQR Method:** The Interquartile Range ($IQR$) measures the spread of the middle $50\%$ of the data:
-  $$IQR = Q3 - Q1$$
-  $$\text{Lower Fence} = Q1 - 1.5 \times IQR$$
-  $$\text{Upper Fence} = Q3 + 1.5 \times IQR$$
-  Values below the lower fence or above the upper fence are flagged as potential outliers.
-
-- **Pandas Outlier Detection:**
+* **Outlier**: An observation unusually far from the general pattern; not automatically an error and must be investigated before handling.
+* **IQR Method**:
+  * $IQR = Q3 - Q1$ (where $Q1$ is the 25th percentile and $Q3$ is the 75th percentile).
+  * Lower Fence $= Q1 - 1.5 \times IQR$
+  * Upper Fence $= Q3 + 1.5 \times IQR$
+* **Pandas Outlier Detection**:
   ```python
   Q1 = df["Salary"].quantile(0.25)
   Q3 = df["Salary"].quantile(0.75)
@@ -1200,13 +1185,12 @@ A missing value is an absent entry in a dataset. The correct treatment depends o
   ```
 
 ## 9.7 Outlier Handling: Removal vs. Capping vs. Log Transformation
-
-- **Removal:** Deleting observations; use only when there is a defensible reason (such as a confirmed error), as it risks losing valid rare data.
-- **Capping (Winsorization):** Replacing values outside chosen limits with boundary values using Pandas `.clip()`:
+* **Removal**: Deleting observations; risky for valid, rare data.
+* **Capping (Winsorization)**: Replacing values outside boundaries with boundary values using Pandas `.clip()`:
   ```python
   df["Salary"] = df["Salary"].clip(lower=lower_boundary, upper=upper_boundary)
   ```
-- **Log Transformation:** Maps strongly right-skewed positive data to a compressed scale ($X_{\text{new}} = \log(X)$ or `np.log1p(x)` for data containing zeros) to reduce the influence of very large values:
+* **Log Transformation**: Maps positive right-skewed data to a compressed scale using logarithms ($X_{\text{new}} = \log(X)$ or `np.log1p(x)` for data containing zeros):
   ```python
   df["Price_log"] = np.log(df["Price"])
   df["Count_log"] = np.log1p(df["Count"])
@@ -1218,7 +1202,6 @@ A missing value is an absent entry in a dataset. The correct treatment depends o
 | Capping | Extreme feature values are replaced by boundary values. | Keeps rows but alters extreme values. |
 | Log transformation | Values are mapped to a compressed scale. | Keeps ordering and observations, but changes scale and interpretation. |
 
-<<<<<<< HEAD
 ---
 
 # 10. AI & Technology Playground Study Notes
@@ -1303,136 +1286,3 @@ Computers process information numerically. An **embedding** is a numerical repre
 | Text generation vs. diffusion | LLMs commonly generate text token by token; diffusion image models iteratively denoise a representation. |
 | Seed vs. steps | Seed controls initial randomness; steps control the number of denoising iterations. |
 | Text/image embeddings | Numerical representations that allow learned relationships and similarity comparisons. |
-=======
-## 9.8 Feature Engineering
-
-Feature engineering is the process of creating, transforming, or selecting input variables (features) so that a machine-learning model can learn useful patterns.
-
-### Features and Target
-
-- **Features ($X$):** The input columns used by a model to make a prediction (e.g., study hours and attendance).
-- **Target ($y$):** The value or label the model is trying to predict (e.g., exam marks).
-
-### Feature Creation
-
-Feature creation means constructing a new feature from existing information when the combination may represent something useful.
-
-- **Example:** Creating an `Effective Study Score` from `Study Hours` and `Attendance`:
-  $$\text{Effective Study Score} = \text{Study Hours} \times \frac{\text{Attendance}}{100}$$
-- **Key Lesson:** Creating a combined feature does not automatically mean the original features should be removed. Retain the originals when they contain useful information that the combined feature hides.
-
-### Feature Transformation — Scaling
-
-Features often have very different numerical ranges (e.g., age from $18$ to $70$ vs. annual income in millions), which affects distance- and gradient-based algorithms.
-
-- **Min-Max Normalization:** Maps values to a chosen range, commonly $[0, 1]$:
-  $$X_{\text{scaled}} = \frac{X - X_{\min}}{X_{\max} - X_{\min}}$$
-  - Minimum becomes $0$ and maximum becomes $1$.
-  - Sensitive to extreme outliers because $\min$ and $\max$ determine the scale.
-- **Standardization (Z-Score Scaling):** Centers values around the mean and scales by standard deviation:
-  $$Z = \frac{X - \mu}{\sigma}$$
-  - Transformed feature has mean $\approx 0$ and standard deviation $\approx 1$.
-  - A Z-score of $+2$ means the value is $2$ standard deviations above the mean.
-
-| Method | Main Idea | Common Result |
-| --- | --- | --- |
-| Min-Max normalization | Rescales values using minimum and maximum. | Typically between $0$ and $1$. |
-| Standardization | Centers around mean and scales by standard deviation. | Mean $\approx 0$; standard deviation $\approx 1$. |
-
-> **Preventing Data Leakage When Scaling:** Always split the dataset first. Fit the scaler **only** on training data (`fit_transform()`), then apply those learned parameters to test data (`transform()`).
-
-### Feature Encoding
-
-Encoding converts categorical values into numerical representations that ML algorithms can process.
-
-- **Nominal vs. Ordinal Categories:**
-  - **Nominal:** Categories have no natural order (e.g., City: Bengaluru, Chennai, Hyderabad).
-  - **Ordinal:** Categories have a meaningful ranking or order (e.g., Education: $\text{School} < \text{Bachelor} < \text{Master} < \text{PhD}$).
-- **Choosing an Encoder:**
-
-| Data Column | Suitable Approach | Reason |
-| --- | --- | --- |
-| City | `OneHotEncoder` | Nominal; creates separate binary columns without implying rank. |
-| Education level | `OrdinalEncoder` | Preserves meaningful order using specified category rankings. |
-| Number of bedrooms | Keep numerical | Already a numerical quantity. |
-| Target class labels ($y$) | `LabelEncoder` | Represents discrete target classes numerically. |
-
-> **Important distinction:** `LabelEncoder` is used for target labels ($y$), `OrdinalEncoder` for ordinal input features ($X$), and `OneHotEncoder` for nominal input features ($X$).
-
-## 9.9 Feature Selection
-
-Feature selection chooses a useful subset of available input features to remove irrelevant or redundant columns, simplify models, reduce computation, and curb overfitting.
-
-### Three Broad Families
-
-| Method | Basic Idea |
-| --- | --- |
-| Filter methods | Score features using statistical properties, generally before training a model. |
-| Wrapper methods | Evaluate subsets of features by repeatedly training and evaluating a model. |
-| Embedded methods | Perform feature selection as part of the model training process. |
-
-### Filter Methods: Correlation
-
-Correlation measures the strength and direction of a **linear** relationship between two numerical variables, ranging from $-1$ to $+1$.
-
-| Correlation | Interpretation |
-| --- | --- |
-| $+1$ | Perfect positive linear relationship |
-| Near $+1$ | Strong positive linear relationship (both variables increase together) |
-| $0$ | No linear relationship (a nonlinear relationship may still exist) |
-| Near $-1$ | Strong negative linear relationship (one increases as the other decreases) |
-| $-1$ | Perfect negative linear relationship |
-
-- **Key Reminders:**
-  - Correlation is **not** a percentage change ($+0.95$ indicates strong linear association, not a $95\%$ increase).
-  - **Correlation does not imply causation.**
-  - A strong negative correlation ($-0.90$) is just as informative for prediction as a strong positive correlation ($+0.95$).
-  - A near-zero linear correlation ($+0.02$) does not mean a feature is useless—it may have a nonlinear relationship or interact well with other features.
-
-### Filter Methods: Chi-Square Test (Introduction)
-
-The Chi-Square ($\chi^2$) test is a filter-method tool for evaluating association between categorical variables (e.g., a categorical feature like `Attendance: High/Low` against a categorical target like `Result: Passed/Failed`).
-
-- It compares **observed counts** in a contingency table with the **expected counts** if the variables were independent.
-- A larger $\chi^2$ statistic provides stronger evidence that the categorical variables are associated; a small statistic suggests little evidence of association.
-- Like correlation, a high $\chi^2$ score indicates association, not causation.
-
-## 9.10 Practical ML Coding Patterns
-
-### Train-Test Split and Scaling
-
-```python
-from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import MinMaxScaler, StandardScaler
-
-X_train, X_test, y_train, y_test = train_test_split(
-    X, y, test_size=0.2, random_state=42
-)
-
-scaler = StandardScaler()
-X_train_scaled = scaler.fit_transform(X_train)
-X_test_scaled = scaler.transform(X_test)
-```
-
-### Categorical Encoding
-
-```python
-from sklearn.preprocessing import OneHotEncoder, OrdinalEncoder
-
-# Nominal feature
-city_encoder = OneHotEncoder(sparse_output=False)
-city_encoded = city_encoder.fit_transform(df[["City"]])
-
-# Ordinal feature
-education_order = [["School", "Bachelor", "Master", "PhD"]]
-education_encoder = OrdinalEncoder(categories=education_order)
-education_encoded = education_encoder.fit_transform(df[["Education"]])
-```
-
-### Pairwise Correlation Matrix
-
-```python
-correlation_matrix = df.corr()
-print(correlation_matrix)
-```
->>>>>>> f8a95936c1061ec4f46c88d4274e6a18dcc7858a
