@@ -13,10 +13,7 @@ A self-contained reference for relearning the core ideas of Python, SQL, C, web 
 7. [Debugging Reference](#7-debugging-reference)
 8. [Project: API Data Explorer](#8-project-api-data-explorer)
 9. [Machine Learning Study Notes](#9-machine-learning-study-notes)
-<<<<<<< HEAD
 10. [AI & Technology Playground Study Notes](#10-ai--technology-playground-study-notes)
-=======
->>>>>>> f8a95936c1061ec4f46c88d4274e6a18dcc7858a
 
 ---
 
