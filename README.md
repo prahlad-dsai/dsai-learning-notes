@@ -264,6 +264,36 @@ print(math.sqrt(25))
 **Common mistakes**
 - The name of a local file can accidentally shadow an installed module.
 
+## 1.14 Data Compression with `zlib`
+
+Python's built-in `zlib` module provides **lossless data compression** and decompression using the **DEFLATE** algorithm—the same core algorithm behind standard `.zip` and `.gz` files.
+
+### How the DEFLATE Algorithm Works
+1. **LZ77 (Lempel-Ziv 1977):** Scans data for repeating byte sequences and replaces duplicates with short backward references (pointers) instead of storing the repeated data again.
+2. **Huffman Coding:** Assigns shorter binary codes to frequently occurring bytes and longer codes to rare bytes, minimizing the total bit count.
+
+```python
+import zlib
+
+# Compression requires byte strings (b"...")
+original_data = b"Hello World! Hello World! Hello World! Hello World!"
+compressed_data = zlib.compress(original_data)
+
+print(f"Original: {len(original_data)} bytes")
+print(f"Compressed: {len(compressed_data)} bytes")
+
+# Lossless decompression restores the exact original bytes
+decompressed_data = zlib.decompress(compressed_data)
+print(decompressed_data.decode("utf-8"))
+```
+
+- `zlib.compress()` takes a `bytes` object and returns compressed binary data.
+- `zlib.decompress()` reverses the process without losing a single bit of original information.
+
+**Common mistakes**
+- Passing a regular string (`str`) instead of a byte string (`bytes`) to `zlib.compress()` raises a `TypeError`. Use `.encode('utf-8')` on strings first.
+- Compressing very small strings may actually produce a slightly larger output due to header metadata overhead.
+
 ---
 
 # 2. Python OOP
